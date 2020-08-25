@@ -1,6 +1,3 @@
-const Link = ReactRouterDOM.Link;
-const Route = ReactRouterDOM.Route;
-
 // sumulate getting products from DataBase
 const products = [
   { name: "Apples_:", country: "Italy", cost: 3, instock: 10 },
@@ -8,7 +5,6 @@ const products = [
   { name: "Beans__:", country: "USA", cost: 2, instock: 5 },
   { name: "Cabbage:", country: "USA", cost: 1, instock: 8 }
 ];
-const cartItems = [];
 
 //=========Cart Component=============
 const Cart = props => {

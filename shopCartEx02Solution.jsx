@@ -1,6 +1,3 @@
-const Link = ReactRouterDOM.Link;
-const Route = ReactRouterDOM.Route;
-
 // sumulate getting products from DataBase
 const products = [
   { name: "Apples_:", country: "Italy", cost: 3, instock: 10 },
@@ -8,7 +5,6 @@ const products = [
   { name: "Beans__:", country: "USA", cost: 2, instock: 5 },
   { name: "Cabbage:", country: "USA", cost: 1, instock: 8 }
 ];
-const cartItems = [];
 
 //=========Cart Component=============
 const Cart = props => {
@@ -65,13 +61,16 @@ const Products = props => {
   });
   let cartList = cart.map((item, index) => {
     return (
-      <Card key={index} index={index} onClick={() => deleteItem(index)}>
+      <Card key={index} index={index}>
         <Card.Header>
           <Accordion.Toggle as={Button} variant="link" eventKey={1 + index}>
             {item.name}
           </Accordion.Toggle>
         </Card.Header>
-        <Accordion.Collapse eventKey={1 + index}>
+        <Accordion.Collapse
+          onClick={() => deleteItem(index)}
+          eventKey={1 + index}
+        >
           <Card.Body>
             $ {item.cost} from {item.country}
           </Card.Body>
