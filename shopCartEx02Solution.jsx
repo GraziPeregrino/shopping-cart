@@ -6,17 +6,17 @@ const products = [
   { name: "Apples_:", country: "Italy", cost: 3, instock: 10 },
   { name: "Oranges:", country: "Spain", cost: 4, instock: 3 },
   { name: "Beans__:", country: "USA", cost: 2, instock: 5 },
-  { name: "Cabbage:", country: "USA", cost: 1, instock: 8 },
+  { name: "Cabbage:", country: "USA", cost: 1, instock: 8 }
 ];
 const cartItems = [];
 
-//=========Cart=============
-const Cart = (props) => {
+//=========Cart Component=============
+const Cart = props => {
   const { Card, Accordion, Button } = ReactBootstrap;
   let data = props.location.data ? props.location.data : products;
   console.log(`data:${JSON.stringify(data)}`);
 
-  const addTodo = (item) => {
+  const addTodo = item => {
     const newTodos = [...cart, { item }];
     setCart(newTodos);
   };
@@ -24,7 +24,7 @@ const Cart = (props) => {
   return <Accordion defaultActiveKey="0">{list}</Accordion>;
 };
 
-const Products = (props) => {
+const Products = props => {
   const [items, setItems] = React.useState(products);
   const [cart, setCart] = React.useState([]);
   const [total, setTotal] = React.useState(0);
@@ -36,19 +36,17 @@ const Products = (props) => {
     Row,
     Col,
     Image,
-    Input,
+    Input
   } = ReactBootstrap;
-  const addToCart = (e) => {
+  const addToCart = e => {
     let name = e.target.name;
-    let item = products.filter((item) => item.name == name);
+    let item = products.filter(item => item.name == name);
     console.log(`add to Cart ${JSON.stringify(item)}`);
     setCart([...cart, ...item]);
   };
-  const deleteItem = (e) => {
-    let name = e.target.innerHTML;
-    let x = cart.findIndex((item) => item.name == name);
-    console.log(`delete index ${x}`);
-    setCart(cart.splice(x, 1));
+  const deleteItem = index => {
+    let newCart = cart.filter((item, i) => index != i);
+    setCart(newCart);
   };
   const photos = ["apple.png", "orange.png", "beans.png", "cabbage.png"];
   let list = products.map((item, index) => {
@@ -67,7 +65,7 @@ const Products = (props) => {
   });
   let cartList = cart.map((item, index) => {
     return (
-      <Card key={index}>
+      <Card key={index} index={index} onClick={() => deleteItem(index)}>
         <Card.Header>
           <Accordion.Toggle as={Button} variant="link" eventKey={1 + index}>
             {item.name}
@@ -83,14 +81,14 @@ const Products = (props) => {
   });
 
   let finalList = () => {
-    let final = cart.map((item) => {
+    let final = cart.map(item => {
       return <div>{item.name}</div>;
     });
     return final;
   };
 
   const checkOut = () => {
-    let costs = cart.map((item) => item.cost);
+    let costs = cart.map(item => item.cost);
     const reducer = (accum, current) => accum + current;
     setTotal(costs.reduce(reducer, 0));
   };

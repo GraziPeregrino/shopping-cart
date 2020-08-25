@@ -1,6 +1,12 @@
-function Todo({ todo, index }) {
+function Todo({ todo, index, removeTodo }) {
   return (
-    <div className="todo" key={index}>
+    <div
+      className="todo"
+      key={index}
+      onClick={() => {
+        removeTodo(index);
+      }}
+    >
       {todo.text}
     </div>
   );
@@ -36,8 +42,12 @@ function App() {
     const newTodos = [...todos, { text }];
     setTodos(newTodos);
   };
+  const removeTodo = index => {
+    let newTodos = todos.filter((item, i) => i != index);
+    setTodos(newTodos);
+  };
   let todoList = todos.map((todo, index) => (
-    <Todo key={index} index={index} todo={todo} />
+    <Todo key={index} index={index} todo={todo} removeTodo={removeTodo} />
   ));
   return (
     <div className="app">

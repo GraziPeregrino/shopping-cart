@@ -10,7 +10,7 @@ const products = [
 ];
 const cartItems = [];
 
-//=========Cart=============
+//=========Cart Component=============
 const Cart = props => {
   const { Card, Accordion, Button } = ReactBootstrap;
   let data = props.location.data ? props.location.data : products;
@@ -23,27 +23,7 @@ const Cart = props => {
 
   return <Accordion defaultActiveKey="0">{list}</Accordion>;
 };
-//========TodoForm - addTodo is passed down from Parent
-const TodoForm = ({ addTodo }) => {
-  const [value, setValue] = React.useState("");
-  const handleSubmit = e => {
-    e.preventDefault();
-    if (!value) return;
-    addTodo(value);
-    setValue("");
-  };
-  return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        className="input"
-        value={value}
-        placeHolder="Add Todo ..."
-        onChange={e => setValue(e.target.value)}
-      />
-    </form>
-  );
-};
+
 const Products = props => {
   const [items, setItems] = React.useState(products);
   const [cart, setCart] = React.useState([]);
@@ -64,12 +44,7 @@ const Products = props => {
     console.log(`add to Cart ${JSON.stringify(item)}`);
     setCart([...cart, ...item]);
   };
-  const deleteItem = e => {
-    let name = e.target.innerHTML;
-    let x = cart.findIndex(item => item.name == name);
-    console.log(`delete index ${x}`);
-    setCart(cart.splice(x, 1));
-  };
+
   const photos = ["apple.png", "orange.png", "beans.png", "cabbage.png"];
   let list = products.map((item, index) => {
     //let n = index + 1049;
@@ -87,7 +62,7 @@ const Products = props => {
   });
   let cartList = cart.map((item, index) => {
     return (
-      <Card key={index}>
+      <Card key={index} index={index}>
         <Card.Header>
           <Accordion.Toggle as={Button} variant="link" eventKey={1 + index}>
             {item.name}
