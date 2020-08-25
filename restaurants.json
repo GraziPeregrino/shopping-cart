@@ -1,0 +1,8 @@
+{
+  "restaurants": [
+    { "name": "Papa Razzi", "type": "Italian" },
+    { "name": "Il Casale", "type": "Italian" },
+    { "name": "Just Asian", "type": "Chinese" },
+    { "name": "Burger King", "type": "American" }
+  ]
+}
