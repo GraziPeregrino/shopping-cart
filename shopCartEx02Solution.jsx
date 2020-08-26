@@ -21,6 +21,7 @@ const Cart = props => {
 };
 
 const Products = props => {
+  console.log(`Products Rendered`);
   const [items, setItems] = React.useState(products);
   const [cart, setCart] = React.useState([]);
   const [total, setTotal] = React.useState(0);
@@ -40,7 +41,7 @@ const Products = props => {
     console.log(`add to Cart ${JSON.stringify(item)}`);
     setCart([...cart, ...item]);
   };
-  const deleteItem = index => {
+  const deleteCartItem = index => {
     let newCart = cart.filter((item, i) => index != i);
     setCart(newCart);
   };
@@ -68,7 +69,7 @@ const Products = props => {
           </Accordion.Toggle>
         </Card.Header>
         <Accordion.Collapse
-          onClick={() => deleteItem(index)}
+          onClick={() => deleteCartItem(index)}
           eventKey={1 + index}
         >
           <Card.Body>
@@ -80,16 +81,23 @@ const Products = props => {
   });
 
   let finalList = () => {
-    let final = cart.map(item => {
-      return <div>{item.name}</div>;
+    let total = checkOut();
+    let final = cart.map((item, index) => {
+      return (
+        <div key={index} index={index}>
+          {item.name}
+        </div>
+      );
     });
-    return final;
+    return { final, total };
   };
 
   const checkOut = () => {
     let costs = cart.map(item => item.cost);
     const reducer = (accum, current) => accum + current;
-    setTotal(costs.reduce(reducer, 0));
+    let newTotal = costs.reduce(reducer, 0);
+    console.log(`total updated to ${newTotal}`);
+    return newTotal;
   };
 
   return (
@@ -105,8 +113,8 @@ const Products = props => {
         </Col>
         <Col>
           <h1>CheckOut </h1>
-          <Button onClick={checkOut}>CheckOut $ {total}</Button>
-          <div> {total && finalList()} </div>
+          <Button onClick={checkOut}>CheckOut $ {finalList().total}</Button>
+          <div> {finalList().total > 0 && finalList().final} </div>
         </Col>
       </Row>
     </Container>
