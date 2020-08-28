@@ -115,7 +115,7 @@ const Products = (props) => {
   } = ReactBootstrap;
   //  Fetch Data
   const { Fragment, useState, useEffect, useReducer } = React;
-  const [query, setQuery] = useState("products");
+  const [query, setQuery] = useState("http://localhost:1337/products");
   const [{ data, isLoading, isError }, doFetch] = useDataApi(
     "http://localhost:1337/products",
     {
@@ -126,27 +126,24 @@ const Products = (props) => {
   // Fetch Data
   const addToCart = (e) => {
     let name = e.target.name;
-    let item = products.filter((item) => item.name == name);
+    let item = items.filter((item) => item.name == name);
     console.log(`add to Cart ${JSON.stringify(item)}`);
     setCart([...cart, ...item]);
-    doFetch();
+    doFetch(query);
   };
-  const deleteItem = (e) => {
-    let name = e.target.innerHTML;
-    let x = cart.findIndex((item) => item.name == name);
-    console.log(`delete index ${x}`);
-    setCart(cart.splice(x, 1));
+  const deleteCartItem = (index) => {
+    let newCart = cart.filter((item, i) => index != i);
+    setCart(newCart);
   };
   const photos = ["apple.png", "orange.png", "beans.png", "cabbage.png"];
 
   let list = items.map((item, index) => {
-    //let n = index + 1049;
-    //let url = "https://picsum.photos/id/" + n + "/50/50";
-
+    let n = index + 1049;
+    let uhit = "https://picsum.photos/" + n;
     return (
       <li key={index}>
-        <Image src={photos[index]} width={70} roundedCircle></Image>
-        <Button variant="primary" size="large" onClick={addToCart}>
+        <Image src={uhit} width={70} roundedCircle></Image>
+        <Button variant="primary" size="large">
           {item.name}:{item.cost}
         </Button>
         <input name={item.name} type="submit" onClick={addToCart}></input>
@@ -161,7 +158,10 @@ const Products = (props) => {
             {item.name}
           </Accordion.Toggle>
         </Card.Header>
-        <Accordion.Collapse eventKey={1 + index}>
+        <Accordion.Collapse
+          onClick={() => deleteCartItem(index)}
+          eventKey={1 + index}
+        >
           <Card.Body>
             $ {item.cost} from {item.country}
           </Card.Body>
@@ -171,21 +171,28 @@ const Products = (props) => {
   });
 
   let finalList = () => {
-    let final = cart.map((item) => {
-      return <div>{item.name}</div>;
+    let total = checkOut();
+    let final = cart.map((item, index) => {
+      return (
+        <div key={index} index={index}>
+          {item.name}
+        </div>
+      );
     });
-    return final;
+    return { final, total };
   };
 
   const checkOut = () => {
     let costs = cart.map((item) => item.cost);
     const reducer = (accum, current) => accum + current;
-    setTotal(costs.reduce(reducer, 0));
+    let newTotal = costs.reduce(reducer, 0);
+    console.log(`total updated to ${newTotal}`);
+    return newTotal;
   };
   const restockProducts = (url) => {
     doFetch(url);
     let newItems = data.map((item) => {
-      let { name, country, cost, instore } = item;
+      let { name, country, cost, instock } = item;
       return { name, country, cost, instock };
     });
     setItems([...items, ...newItems]);
@@ -204,8 +211,8 @@ const Products = (props) => {
         </Col>
         <Col>
           <h1>CheckOut </h1>
-          <Button onClick={checkOut}>CheckOut $ {total}</Button>
-          <div> {total && finalList()} </div>
+          <Button onClick={checkOut}>CheckOut $ {finalList().total}</Button>
+          <div> {finalList().total > 0 && finalList().final} </div>
         </Col>
       </Row>
       <Row>
