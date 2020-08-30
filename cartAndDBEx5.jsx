@@ -11,34 +11,9 @@ const Cart = (props) => {
   let data = props.location.data ? props.location.data : products;
   console.log(`data:${JSON.stringify(data)}`);
 
-  const addTodo = (item) => {
-    const newTodos = [...cart, { item }];
-    setCart(newTodos);
-  };
-
   return <Accordion defaultActiveKey="0">{list}</Accordion>;
 };
-//========TodoForm - addTodo is passed down from Parent
-const TodoForm = ({ addTodo }) => {
-  const [value, setValue] = React.useState("");
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!value) return;
-    addTodo(value);
-    setValue("");
-  };
-  return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        className="input"
-        value={value}
-        placeHolder="Add Todo ..."
-        onChange={(e) => setValue(e.target.value)}
-      />
-    </form>
-  );
-};
+
 const useDataApi = (initialUrl, initialData) => {
   const { useState, useEffect, useReducer } = React;
   const [url, setUrl] = useState(initialUrl);
