@@ -11,34 +11,9 @@ const Cart = (props) => {
   let data = props.location.data ? props.location.data : products;
   console.log(`data:${JSON.stringify(data)}`);
 
-  const addTodo = (item) => {
-    const newTodos = [...cart, { item }];
-    setCart(newTodos);
-  };
-
   return <Accordion defaultActiveKey="0">{list}</Accordion>;
 };
-//========TodoForm - addTodo is passed down from Parent
-const TodoForm = ({ addTodo }) => {
-  const [value, setValue] = React.useState("");
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!value) return;
-    addTodo(value);
-    setValue("");
-  };
-  return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        className="input"
-        value={value}
-        placeHolder="Add Todo ..."
-        onChange={(e) => setValue(e.target.value)}
-      />
-    </form>
-  );
-};
+
 const useDataApi = (initialUrl, initialData) => {
   const { useState, useEffect, useReducer } = React;
   const [url, setUrl] = useState(initialUrl);
@@ -127,12 +102,21 @@ const Products = (props) => {
   const addToCart = (e) => {
     let name = e.target.name;
     let item = items.filter((item) => item.name == name);
+    item[0].instock = item[0].instock - 1;
     console.log(`add to Cart ${JSON.stringify(item)}`);
     setCart([...cart, ...item]);
   };
-  const deleteCartItem = (index) => {
-    let newCart = cart.filter((item, i) => index != i);
+  const deleteCartItem = (delIndex) => {
+    // this is the index in the cart not in the Product List
+
+    let newCart = cart.filter((item, i) => delIndex != i);
+    let target = cart.filter((item, index) => delIndex == index);
+    let newItems = items.map((item, index) => {
+      if (item.name == target[0].name) item.instock = item.instock + 1;
+      return item;
+    });
     setCart(newCart);
+    setItems(newItems);
   };
   const photos = ["apple.png", "orange.png", "beans.png", "cabbage.png"];
 
@@ -143,7 +127,7 @@ const Products = (props) => {
       <li key={index}>
         <Image src={uhit} width={70} roundedCircle></Image>
         <Button variant="primary" size="large">
-          {item.name}:{item.cost}
+          {item.name}:${item.cost}-Stock={item.instock}
         </Button>
         <input name={item.name} type="submit" onClick={addToCart}></input>
       </li>

@@ -6,45 +6,20 @@ const products = [
   { name: "Apples_:", country: "Italy", cost: 3, instock: 10 },
   { name: "Oranges:", country: "Spain", cost: 4, instock: 3 },
   { name: "Beans__:", country: "USA", cost: 2, instock: 5 },
-  { name: "Cabbage:", country: "USA", cost: 1, instock: 8 }
+  { name: "Cabbage:", country: "USA", cost: 1, instock: 8 },
 ];
 const cartItems = [];
 
 //=========Cart=============
-const Cart = props => {
+const Cart = (props) => {
   const { Card, Accordion, Button } = ReactBootstrap;
   let data = props.location.data ? props.location.data : products;
   console.log(`data:${JSON.stringify(data)}`);
 
-  const addTodo = item => {
-    const newTodos = [...cart, { item }];
-    setCart(newTodos);
-  };
-
   return <Accordion defaultActiveKey="0">{list}</Accordion>;
 };
-//========TodoForm - addTodo is passed down from Parent
-const TodoForm = ({ addTodo }) => {
-  const [value, setValue] = React.useState("");
-  const handleSubmit = e => {
-    e.preventDefault();
-    if (!value) return;
-    addTodo(value);
-    setValue("");
-  };
-  return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        className="input"
-        value={value}
-        placeHolder="Add Todo ..."
-        onChange={e => setValue(e.target.value)}
-      />
-    </form>
-  );
-};
-const Products = props => {
+
+const Products = (props) => {
   const [items, setItems] = React.useState(products);
   const [cart, setCart] = React.useState([]);
   const [total, setTotal] = React.useState(0);
@@ -56,17 +31,17 @@ const Products = props => {
     Row,
     Col,
     Image,
-    Input
+    Input,
   } = ReactBootstrap;
-  const addToCart = e => {
+  const addToCart = (e) => {
     let name = e.target.name;
-    let item = products.filter(item => item.name == name);
+    let item = products.filter((item) => item.name == name);
     console.log(`add to Cart ${JSON.stringify(item)}`);
     setCart([...cart, ...item]);
   };
-  const deleteItem = e => {
+  const deleteItem = (e) => {
     let name = e.target.innerHTML;
-    let x = cart.findIndex(item => item.name == name);
+    let x = cart.findIndex((item) => item.name == name);
     console.log(`delete index ${x}`);
     setCart(cart.splice(x, 1));
   };
@@ -103,14 +78,14 @@ const Products = props => {
   });
 
   let finalList = () => {
-    let final = cart.map(item => {
+    let final = cart.map((item) => {
       return <div>{item.name}</div>;
     });
     return final;
   };
 
   const checkOut = () => {
-    let costs = cart.map(item => item.cost);
+    let costs = cart.map((item) => item.cost);
     const reducer = (accum, current) => accum + current;
     setTotal(costs.reduce(reducer, 0));
   };
